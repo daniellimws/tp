@@ -177,7 +177,7 @@ class TimetableTest {
      */
     private LocalDate getFirstDayOfWeek() {
         LocalDate now = LocalDate.now();
-        TemporalField field = WeekFields.of(Locale.forLanguageTag("en_SG")).dayOfWeek();
+        TemporalField field = WeekFields.of(Locale.getDefault()).dayOfWeek();
         return now.with(field, 1);
     }
 

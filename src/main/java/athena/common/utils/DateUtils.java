@@ -3,6 +3,7 @@ package athena.common.utils;
 import athena.Forecast;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class DateUtils {
      */
     public static LocalDate getFirstDayOfWeek() {
         LocalDate now = LocalDate.now();
-        TemporalField weekField = WeekFields.of(Locale.forLanguageTag("en_SG")).dayOfWeek();
+        TemporalField weekField = WeekFields.of(Locale.getDefault()).dayOfWeek();
         return now.with(weekField, 1);
     }
 
@@ -62,5 +63,10 @@ public class DateUtils {
         }
 
         return dates;
+    }
+
+    public static String formatDate(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return date.format(formatter);
     }
 }
