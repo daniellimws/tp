@@ -164,8 +164,7 @@ class TimetableTest {
         days.add(day);
 
         TaskList taskList = TestSetup.getTestTaskList();
-        Timetable timetable = new Timetable(taskList, new ImportanceFilter(Importance.HIGH),
-                new ForecastFilter(Forecast.ALL));
+        Timetable timetable = new Timetable(taskList, Importance.HIGH, Forecast.ALL);
 
         assertTrue(areTimetablesSame(timetable, days));
     }

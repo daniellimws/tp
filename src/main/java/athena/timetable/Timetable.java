@@ -1,15 +1,14 @@
 package athena.timetable;
 
 import athena.Forecast;
+import athena.Importance;
 import athena.TaskList;
 import athena.common.utils.DateUtils;
 import athena.task.Task;
 import athena.task.taskfilter.ForecastFilter;
 import athena.task.taskfilter.ImportanceFilter;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
@@ -70,14 +69,15 @@ public class Timetable {
     /**
      * Creates a timetable object from a TaskList, ImportanceFilter and ForecastFilter object.
      *
-     * @param taskList         Task list
-     * @param importanceFilter Filters tasks of a certain importance
-     * @param forecastFilter   Filters tasks based on forecast
+     * @param taskList   Task list
+     * @param importance To filter tasks of a certain importance
+     * @param forecast   To filter tasks based on given forecast
      */
-    public Timetable(TaskList taskList, ImportanceFilter importanceFilter, ForecastFilter forecastFilter) {
+    public Timetable(TaskList taskList, Importance importance, Forecast forecast) {
         assert taskList != null;
-        this.taskList = taskList.getFilteredList(importanceFilter).getFilteredList(forecastFilter);
-        this.forecast = forecastFilter.getForecast();
+        this.taskList = taskList.getFilteredList(new ImportanceFilter(importance))
+                .getFilteredList(new ForecastFilter(forecast));
+        this.forecast = forecast;
         populateTimetable();
     }
 
