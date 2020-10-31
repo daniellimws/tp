@@ -1,5 +1,6 @@
 package athena.task;
 
+import athena.common.utils.DateUtils;
 import athena.exceptions.TaskDuringSleepTimeException;
 
 import java.time.DayOfWeek;
@@ -107,7 +108,7 @@ public class Time implements Comparable<Time> {
             } catch (DateTimeParseException e) {
                 // TODO: Handle this properly
                 System.out.println("I don't understand the date you gave. So I set it to today.");
-                this.recurrence = LocalDate.now().getDayOfWeek().toString();
+                this.recurrence = DateUtils.formatDate(LocalDate.now());
                 recurrenceDates.add(LocalDate.now());
             }
         }
