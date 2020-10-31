@@ -54,10 +54,17 @@ public class Athena {
         Scanner input = new Scanner(System.in);
 
         while (!isExit) {
-            allocator = new TimeAllocator(taskList);
-            allocator.runAllocate();
-            inputString = input.nextLine();
-            isExit = false; //logicManager.execute(inputString);
+            try {
+                allocator = new TimeAllocator(taskList);
+                allocator.runAllocate();
+                inputString = input.nextLine();
+                isExit = logicManager.execute(inputString);
+            } catch (CommandException e) {
+                e.printErrorMessage();
+            } catch (StorageException e) {
+                e.printStackTrace();
+            }
+            continue;
         }
     }
 }
