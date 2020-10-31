@@ -107,6 +107,7 @@ public class Time implements Comparable<Time> {
             } catch (DateTimeParseException e) {
                 // TODO: Handle this properly
                 System.out.println("I don't understand the date you gave. So I set it to today.");
+                this.recurrence = LocalDate.now().getDayOfWeek().toString();
                 recurrenceDates.add(LocalDate.now());
             }
         }
