@@ -16,7 +16,6 @@ public class TimeAllocator {
     TaskList flexibleTaskList;
     TaskList fixedTaskList;
     TaskList taskList;
-    private static final int DATE_TIME_FORMAT = 5;
 
 
     /**
@@ -102,8 +101,7 @@ public class TimeAllocator {
                     timeInfo.setStartTime(LocalTime.of(pos + count, 0));
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM");
                     timeInfo.resetRecurrence();
-                    String test = currDay.format(formatter);
-                    timeInfo.setRecurrence(test);
+                    timeInfo.setRecurrence(currDay.format(formatter));
                     assignedNumbers.add(taskNumber);
                     this.flexibleTaskList.deleteTask(taskNumber);
                 } catch (TaskNotFoundException e) {
