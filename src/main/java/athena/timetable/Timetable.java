@@ -7,6 +7,7 @@ import athena.common.utils.DateUtils;
 import athena.task.Task;
 import athena.task.taskfilter.ForecastFilter;
 import athena.task.taskfilter.ImportanceFilter;
+import athena.ui.ColorText;
 
 import java.time.LocalDate;
 import java.time.temporal.TemporalField;
@@ -37,7 +38,9 @@ public class Timetable {
     private Forecast forecast;
 
     private int wakeUpHour = 8;
-    private int sleepHour = 24;
+    private int sleepHour = 22;
+
+    private ColorText colorText = new ColorText();
 
     /**
      * Creates a timetable object from a TaskList object.
@@ -67,7 +70,8 @@ public class Timetable {
     }
 
     /**
-     * Creates a timetable object from a TaskList, ImportanceFilter and ForecastFilter object.
+     * Creates a timetable object from a TaskList, ImportanceFilter and
+     * ForecastFilter object.
      *
      * @param taskList   Task list
      * @param importance To filter tasks of a certain importance
@@ -114,8 +118,9 @@ public class Timetable {
     }
 
     /**
-     * Populates the timetable, represented by a list of TimetableDays with the information from the task list.
-     * For this version, we only populate the timetable with the tasks for this week (starting from Monday).
+     * Populates the timetable, represented by a list of TimetableDays with the
+     * information from the task list. For this version, we only populate the
+     * timetable with the tasks for this week (starting from Monday).
      */
     private void populateTimetable() {
         this.timetableDays = new ArrayList<TimetableDay>();
@@ -145,8 +150,8 @@ public class Timetable {
     }
 
     /**
-     * Generates the timetable header containing hour marks.
-     * For example, +------08------09------10------11------+
+     * Generates the timetable header containing hour marks. For example,
+     * +------08------09------10------11------+
      *
      * @param startHour The starting hour in 24-hour representation.
      * @param endHour   The ending hour in 24-hour representation.
@@ -157,10 +162,11 @@ public class Timetable {
 
         header += BOX_CORNER + DAY_BOX_HORIZONTAL_BORDER;
         for (int hour = startHour; hour < endHour; hour++) {
-            String paddedHourString = String.format("%02d", hour);
+            String paddedHourString = colorText.toPurple(String.format("%02d", hour));
             header += paddedHourString + TIME_HEADER_HORIZONTAL_BORDER;
         }
-        header += BOX_CORNER + "\n";
+        header += BOX_CORNER;
+        header += "\n";
 
         return header;
     }
@@ -170,7 +176,8 @@ public class Timetable {
      *
      * @param startHour The starting hour in 24-hour representation.
      * @param endHour   The ending hour in 24-hour representation.
-     * @return A string that represents the bottom border for a day in the timetable.
+     * @return A string that represents the bottom border for a day in the
+     *         timetable.
      */
     private String drawBottomBorder(int startHour, int endHour) {
         String row = "";
@@ -183,9 +190,9 @@ public class Timetable {
     }
 
     /**
-     * Utility method to fit a string into a given length.
-     * If the string is shorter than desired, pad it with spaces.
-     * If the string is longer than desired, truncate it and replace the end with "..".
+     * Utility method to fit a string into a given length. If the string is shorter
+     * than desired, pad it with spaces. If the string is longer than desired,
+     * truncate it and replace the end with "..".
      *
      * @param string The string to fit.
      * @param maxLen The desired length.
@@ -215,23 +222,25 @@ public class Timetable {
                     return task;
                 }
             } catch (NullPointerException e) {
-                //do nothing
+                // do nothing
             }
         }
         return null;
     }
 
     /**
-     * Generates a row for a day in the timetable containing the task information desired.
+     * Generates a row for a day in the timetable containing the task information
+     * desired.
      *
      * @param day            The TimetableDay object for this day.
      * @param startHour      The starting hour in 24-hour representation.
      * @param endHour        The ending hour in 24-hour representation.
-     * @param taskInfoWriter A Function that extracts the information desired from a task.
+     * @param taskInfoWriter A Function that extracts the information desired from a
+     *                       task.
      * @return A string containing the task information desired.
      */
     private String drawTimetableDayRow(TimetableDay day, int startHour, int endHour,
-                                       Function<Task, String> taskInfoWriter) {
+            Function<Task, String> taskInfoWriter) {
         String row = "";
 
         for (int hour = startHour; hour < endHour; hour++) {
@@ -242,18 +251,21 @@ public class Timetable {
             }
 
             int duration = task.getTimeInfo().getDuration();
-            // TODO: better handle tasks exceeding sleep time, currently it just cuts off at sleep time
+            // TODO: better handle tasks exceeding sleep time, currently it just cuts off at
+            // sleep time
             duration = Math.min(duration, endHour - hour);
             hour += duration - 1;
             int boxWidth = duration * (TASK_BOX_HORIZONTAL_BORDER + BOX_CORNER).length() - 2;
-            row += String.format(TASK_BOX, shortenOrPadString(taskInfoWriter.apply(task), boxWidth));
+            String taskInfo = shortenOrPadString(taskInfoWriter.apply(task), boxWidth);
+            row += String.format(TASK_BOX, colorText.toBlue(taskInfo));
         }
 
         return row;
     }
 
     /**
-     * Generates the first row for a day in the timetable, which contains the name of the day and the task names.
+     * Generates the first row for a day in the timetable, which contains the name
+     * of the day and the task names.
      *
      * @param day       The TimetableDay object for this day.
      * @param startHour The starting hour in 24-hour representation.
@@ -262,7 +274,7 @@ public class Timetable {
      */
     private String drawTimetableDayFirstRow(TimetableDay day, int startHour, int endHour) {
         String dayShortName = day.getDate().getDayOfWeek().toString().substring(0, 3).toUpperCase();
-        String row = String.format(DAY_BOX, dayShortName);
+        String row = colorText.toPurple(String.format(DAY_BOX, dayShortName));
         row += drawTimetableDayRow(day, startHour, endHour, new Function<Task, String>() {
             @Override
             public String apply(Task task) {
@@ -274,7 +286,8 @@ public class Timetable {
     }
 
     /**
-     * Generates the second row for a day in the timetable, which contains the date of the day and the task numbers.
+     * Generates the second row for a day in the timetable, which contains the date
+     * of the day and the task numbers.
      *
      * @param day       The TimetableDay object for this day.
      * @param startHour The starting hour in 24-hour representation.
@@ -283,7 +296,7 @@ public class Timetable {
      */
     private String drawTimetableDaySecondRow(TimetableDay day, int startHour, int endHour) {
         LocalDate date = day.getDate();
-        String row = String.format(DATE_BOX, date.getDayOfMonth(), date.getMonthValue());
+        String row = colorText.toPurple(String.format(DATE_BOX, date.getDayOfMonth(), date.getMonthValue()));
 
         row += drawTimetableDayRow(day, startHour, endHour, new Function<Task, String>() {
             @Override
@@ -338,10 +351,9 @@ public class Timetable {
         for (LocalDate date : dates) {
             if (timetableDayMap.containsKey(date)) {
                 list += timetableDayMap.get(date);
+                list += "\n";
             } else {
-                list += new TimetableDay(date);
             }
-            list += "\n";
         }
         return list;
     }

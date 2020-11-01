@@ -2,14 +2,14 @@ package athena.timetable;
 
 import athena.TaskList;
 import athena.task.Task;
+import athena.ui.ColorText;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
- * Represents a day in the timetable.
- * Contains the date and the list of tasks, which is a subset of all the tasks
- * that the user registered into the program.
+ * Represents a day in the timetable. Contains the date and the list of tasks,
+ * which is a subset of all the tasks that the user registered into the program.
  */
 public class TimetableDay {
     private LocalDate date;
@@ -54,17 +54,20 @@ public class TimetableDay {
     }
 
     /**
-     * Generates a string containing the date and list of tasks that is to
-     * be printed to the user.
+     * Generates a string containing the date and list of tasks that is to be
+     * printed to the user.
      *
      * @return A string containing the date and list of tasks.
      */
     @Override
     public String toString() {
-        String message = date.toString() + ":\n";
+        String message = "";
         if (taskList.getTasks().isEmpty()) {
-            message += "Got no tasks for this day\n";
+
         } else {
+            message = date.toString() + ":\n";
+            ColorText colorText = new ColorText();
+            message = colorText.toPurple(message);
             for (Task task : taskList.getTasks()) {
                 message += task + "\n";
             }

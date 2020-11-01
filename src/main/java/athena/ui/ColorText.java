@@ -30,4 +30,10 @@ public class ColorText {
 
         return ansiYellow + inputString + ANSI_RESET;
     }
+
+    public String toGreen(String inputString) {
+        String ansiGreen = "\u001b[32m";
+
+        return ansiGreen + inputString + ANSI_RESET;
+    }
 }

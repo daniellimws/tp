@@ -2,6 +2,7 @@ package athena.task;
 
 import athena.Importance;
 import athena.exceptions.TaskDuringSleepTimeException;
+import athena.ui.ColorText;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -27,8 +28,7 @@ public class Task {
 
     private Time timeInfo;
 
-
-    //TODO: add dependencies between Tasks
+    // TODO: add dependencies between Tasks
 
     /**
      * Determines if the task is done.
@@ -52,9 +52,8 @@ public class Task {
      * @param number     task number
      * @param isFlexible time flexibility
      */
-    public Task(String name, String startTime, String duration, String deadline,
-                String recurrence, Importance importance, String notes, int number, Boolean isFlexible)
-            throws TaskDuringSleepTimeException {
+    public Task(String name, String startTime, String duration, String deadline, String recurrence,
+            Importance importance, String notes, int number, Boolean isFlexible) throws TaskDuringSleepTimeException {
         this.name = name;
         assert !this.name.equals("");
         this.importance = importance;
@@ -64,14 +63,13 @@ public class Task {
         this.timeInfo = new Time(isFlexible, startTime, duration, deadline, recurrence);
     }
 
-
     public LocalDate getRecurrenceDate(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return LocalDate.parse(date, formatter);
     }
 
-    public Task(String name, boolean isFlexible, boolean isDone, Importance importance,
-                String notes, int number, Time timeInfo) throws TaskDuringSleepTimeException {
+    public Task(String name, boolean isFlexible, boolean isDone, Importance importance, String notes, int number,
+            Time timeInfo) throws TaskDuringSleepTimeException {
         this.name = name;
         this.isFlexible = isFlexible;
         this.isDone = isDone;
@@ -86,12 +84,12 @@ public class Task {
         try {
             copy = new Task(name, isFlexible, isDone, importance, notes, number, timeInfo);
         } catch (TaskDuringSleepTimeException e) {
-            assert false;   // a task that can be cloned should have been blocked from being assigned the sleep time
+            assert false; // a task that can be cloned should have been blocked from being assigned the
+                          // sleep time
         }
 
         return copy;
     }
-
 
     /**
      * Edits the features of the task.
@@ -104,8 +102,8 @@ public class Task {
      * @param importance New task importance
      * @param notes      New task notes
      */
-    public void edit(String name, String startTime, String duration,
-                     String deadline, String recurrence, Importance importance, String notes) {
+    public void edit(String name, String startTime, String duration, String deadline, String recurrence,
+            Importance importance, String notes) {
         this.name = name;
         assert !this.name.equals("");
         assert !startTime.equals("");
@@ -121,7 +119,6 @@ public class Task {
             this.notes = notes;
         }
     }
-
 
     /**
      * Return the importance of the task.
@@ -217,11 +214,11 @@ public class Task {
      * @return String representing details of the task the user wants to restore
      */
 
-    //TODO: rework this, hard to do if dependencies are added
+    // TODO: rework this, hard to do if dependencies are added
     public String getTaskRestore() {
-        String taskRestore = "add n/" + this.getName() + " d/" + timeInfo.getDuration()
-                + " D/" + this.timeInfo.getDeadline() + " r/" + timeInfo.getRecurrence() + " i/"
-                + this.getImportance() + " a/" + this.getNotes();
+        String taskRestore = "add n/" + this.getName() + " d/" + timeInfo.getDuration() + " D/"
+                + this.timeInfo.getDeadline() + " r/" + timeInfo.getRecurrence() + " i/" + this.getImportance() + " a/"
+                + this.getNotes();
         if (!isFlexible) {
             taskRestore += " t/" + timeInfo.getStartTime().toString().replace(":", "");
         }
@@ -241,7 +238,6 @@ public class Task {
         return copy;
     }
 
-
     /**
      * Converts a task object to a string.
      *
@@ -249,8 +245,15 @@ public class Task {
      */
     @Override
     public String toString() {
-        return getStatus() + " " + name + " at " + timeInfo.getStartTime() + " finish by "
-                + timeInfo.getDeadline() + " [" + number + "]";
+        String deadline = "";
+        ColorText colorText = new ColorText();
+        if (!timeInfo.getDeadline().equals("No deadline")) {
+            deadline = " finish by " + colorText.toRed(timeInfo.getDeadline());
+        }
+        String numberString = "[" + number + "]";
+        return colorText.toYellow(getStatus()) + " " + colorText.toBlue(name) + " at "
+                + colorText.toPurple(timeInfo.getStartTime().toString()) + deadline + " "
+                + colorText.toGreen(numberString);
     }
 
     /**
@@ -261,16 +264,15 @@ public class Task {
     public String getDetailsAsString() {
         return "\n Done? " + getStatus() + "\n Name: " + name + "\n Start time: " + timeInfo.getStartTime()
                 + "\n Deadline: " + timeInfo.getDeadline() + "\n Duration: " + timeInfo.getDuration()
-                + "\n Recurrence: " + timeInfo.getRecurrence()
-                + "\n Importance: " + importance + "\n Notes: " + notes;
+                + "\n Recurrence: " + timeInfo.getRecurrence() + "\n Importance: " + importance + "\n Notes: " + notes;
     }
-
 
     /**
      * Compare this task with another object.
      *
      * @param o Object to compare with.
-     * @return Whether the object compared with is also a task and has the exact same properties.
+     * @return Whether the object compared with is also a task and has the exact
+     *         same properties.
      */
     @Override
     public boolean equals(Object o) {
@@ -282,11 +284,8 @@ public class Task {
         }
         Task task = (Task) o;
 
-        return isDone == task.isDone
-                && number == task.number
-                && Objects.equals(name, task.name)
-                && Objects.equals(timeInfo, task.timeInfo)
-                && importance == task.importance
+        return isDone == task.isDone && number == task.number && Objects.equals(name, task.name)
+                && Objects.equals(timeInfo, task.timeInfo) && importance == task.importance
                 && Objects.equals(notes, task.notes);
     }
 

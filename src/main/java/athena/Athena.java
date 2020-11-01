@@ -3,6 +3,7 @@ package athena;
 import athena.logic.LogicManager;
 import athena.exceptions.CommandException;
 import athena.ui.AthenaUi;
+import athena.ui.ColorText;
 import athena.exceptions.StorageCorruptedException;
 import athena.exceptions.StorageException;
 import athena.exceptions.StorageLoadFailException;
@@ -53,10 +54,13 @@ public class Athena {
         }
         Scanner input = new Scanner(System.in);
 
+        ColorText colorText = new ColorText();
         while (!isExit) {
             try {
                 allocator = new TimeAllocator(taskList);
                 allocator.runAllocate();
+                System.out.print(colorText.toPurple("... "));
+                System.out.flush();
                 inputString = input.nextLine();
                 isExit = logicManager.execute(inputString);
             } catch (CommandException e) {

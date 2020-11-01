@@ -61,7 +61,8 @@ public class Time implements Comparable<Time> {
                 throw new TaskDuringSleepTimeException();
             }
         }
-        this.endTime = this.startTime.plusHours(this.duration);
+        if (this.startTime != null)
+            this.endTime = this.startTime.plusHours(this.duration);
 
     }
 
@@ -137,8 +138,7 @@ public class Time implements Comparable<Time> {
         if (recurrence.length() == "dd-MM".length()) {
             int year = getYear(recurrence);
             this.recurrence = recurrence + "-" + year;
-            recurrenceDates.add(LocalDate.parse(recurrence + "-"
-                    + Integer.toString(year), formatter));
+            recurrenceDates.add(LocalDate.parse(recurrence + "-" + Integer.toString(year), formatter));
         } else {
             recurrenceDates.add(LocalDate.parse(recurrence, formatter));
         }
@@ -163,8 +163,7 @@ public class Time implements Comparable<Time> {
         int year;
         if (currentDate.getMonthValue() > month) {
             year = currentDate.getYear() + 1;
-        } else if (currentDate.getMonthValue() == month
-                && currentDate.getDayOfMonth() > day) {
+        } else if (currentDate.getMonthValue() == month && currentDate.getDayOfMonth() > day) {
             System.out.println("Hello!");
             year = currentDate.getYear() + 1;
         } else {
@@ -183,7 +182,6 @@ public class Time implements Comparable<Time> {
      * @return Start time of task
      */
 
-
     public LocalTime getStartTime() {
         return startTime;
     }
@@ -195,7 +193,6 @@ public class Time implements Comparable<Time> {
     public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
     }
-
 
     /**
      * Converts the start time to a string.
@@ -241,7 +238,6 @@ public class Time implements Comparable<Time> {
         return deadline;
     }
 
-
     public Boolean getFlexible() {
         return isFlexible;
     }
@@ -270,7 +266,8 @@ public class Time implements Comparable<Time> {
      * Compare this time with another object.
      *
      * @param o Object to compare with.
-     * @return Whether the object compared with is also a time and has the exact same properties.
+     * @return Whether the object compared with is also a time and has the exact
+     *         same properties.
      */
     @Override
     public boolean equals(Object o) {
@@ -282,18 +279,16 @@ public class Time implements Comparable<Time> {
         }
         Time time = (Time) o;
 
-        return isFlexible == time.isFlexible
-                && Objects.equals(startTime, time.startTime)
-                && Objects.equals(duration, time.duration)
-                && Objects.equals(deadline, time.deadline)
+        return isFlexible == time.isFlexible && Objects.equals(startTime, time.startTime)
+                && Objects.equals(duration, time.duration) && Objects.equals(deadline, time.deadline)
                 && Objects.equals(recurrenceDates, time.recurrenceDates);
     }
 
-    //    @Override
-    //    public int compareTo(Time o) {
-    //        if(this.startTime>o.startTime){
-    //            return 1;
-    //        }
-    //        return 0;
-    //    }
+    // @Override
+    // public int compareTo(Time o) {
+    // if(this.startTime>o.startTime){
+    // return 1;
+    // }
+    // return 0;
+    // }
 }
