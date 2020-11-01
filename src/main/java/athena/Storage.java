@@ -2,6 +2,7 @@ package athena;
 
 
 import athena.exceptions.ClashInTaskException;
+import athena.exceptions.InvalidTimeFormatException;
 import athena.exceptions.StorageCorruptedException;
 import athena.exceptions.StorageException;
 import athena.exceptions.StorageLoadFailException;
@@ -113,6 +114,8 @@ public class Storage {
             } catch (TaskNotFoundException e) {
                 throw new StorageLoadFailException();
             } catch (TaskDuringSleepTimeException e) {
+                throw new StorageCorruptedException(data);
+            } catch (InvalidTimeFormatException e) {
                 throw new StorageCorruptedException(data);
             }
         }
