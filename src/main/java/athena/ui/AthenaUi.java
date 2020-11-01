@@ -175,6 +175,13 @@ public class AthenaUi implements Ui {
     }
 
     /**
+     * Print a message when user enters time in invalid format.
+     */
+    public void printInvalidTimeFormatException() {
+        System.out.println(colorText.toRed("\nPlease enter your time in the format [HHMM]\n"));
+    }
+
+    /**
      * Prints a message stating the task is not found.
      *
      * @param taskNumber Task number given by the user
