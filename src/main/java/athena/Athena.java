@@ -66,5 +66,7 @@ public class Athena {
             }
             continue;
         }
+
+        input.close();
     }
 }
