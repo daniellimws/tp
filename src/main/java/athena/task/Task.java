@@ -137,6 +137,7 @@ public class Task {
      */
     public void setDone() {
         isDone = true;
+        isFlexible = false;
     }
 
     /**

@@ -142,7 +142,7 @@ public class Time implements Comparable<Time> {
         }
     }
 
-    private void resetRecurrence() {
+    public void resetRecurrence() {
         recurrenceDates.clear();
     }
 

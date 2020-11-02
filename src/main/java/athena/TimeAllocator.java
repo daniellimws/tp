@@ -8,6 +8,7 @@ import athena.task.taskfilter.ForecastFilter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -15,6 +16,7 @@ public class TimeAllocator {
     TaskList flexibleTaskList;
     TaskList fixedTaskList;
     TaskList taskList;
+    private static final int DATE_TIME_FORMAT = 5;
 
 
     /**
@@ -39,11 +41,10 @@ public class TimeAllocator {
     public void runAllocate() {
         LocalDate currDay = LocalDate.now();
         ForecastFilter forecast = new ForecastFilter(Forecast.DAY);
-        for (int day = 0; day < 1; day++) {
+        ArrayList<Task> undefinedTimeTasks = getSortedFlexibleTasks(this.flexibleTaskList);
+        for (int day = 0; day < 31; day++) {
             ArrayList<Integer> dayLog = new ArrayList<Integer>(Collections.nCopies(24, -1));
             ArrayList<Task> predefinedTimeTasks = getSortedFixedTasks(getFixedDayTasks(currDay));
-            ArrayList<Task> undefinedTimeTasks = getSortedFlexibleTasks(getFlexibleDayTasks(currDay));
-            currDay = currDay.plusDays(1);
             for (Task currTask : predefinedTimeTasks) {
                 int tag = currTask.getNumber();
                 Time timeInfo = currTask.getTimeInfo();
@@ -64,11 +65,7 @@ public class TimeAllocator {
                 carryOverTasks = new ArrayList<Task>();
                 ArrayList<Integer> bestLog = getBestLog(pos, end, undefinedTimeTasks, carryOverTasks);
                 populateDayLog(pos, dayLog, bestLog);
-                try {
-                    assignTime(bestLog, pos);
-                } catch (TaskNotFoundException e) {
-                    //do nothing
-                }
+                assignTime(bestLog, pos, currDay);
                 undefinedTimeTasks = carryOverTasks;
                 start = end;
                 if (end == sleep) {
@@ -77,11 +74,13 @@ public class TimeAllocator {
             }
             for (Task currTask : carryOverTasks) {
                 try {
-                    taskList.getTaskFromNumber(currTask.getNumber()).getTimeInfo().setStartTime(null);
+                    Time timeInfo = taskList.getTaskFromNumber(currTask.getNumber()).getTimeInfo();
+                    timeInfo.setStartTime(null);
                 } catch (TaskNotFoundException e) {
                     //do nothing
                 }
             }
+            currDay = currDay.plusDays(1);
         }
     }
 
@@ -90,16 +89,27 @@ public class TimeAllocator {
      *
      * @param bestLog list of taskNumbers in the index corresponding to the hour they are assigned to
      * @param pos     starting position of the log
+     * @param currDay
      * @throws TaskNotFoundException if task is not in the taskList
      */
-    private void assignTime(ArrayList<Integer> bestLog, int pos) throws TaskNotFoundException {
+    private void assignTime(ArrayList<Integer> bestLog, int pos, LocalDate currDay) {
         int count = 0;
         ArrayList<Integer> assignedNumbers = new ArrayList<>();
         for (int taskNumber : bestLog) {
             if (!assignedNumbers.contains(taskNumber)) {
-                this.flexibleTaskList.getTaskFromNumber(taskNumber)
-                        .getTimeInfo().setStartTime(LocalTime.of(pos + count, 0));
-                assignedNumbers.add(taskNumber);
+                try {
+                    Time timeInfo = this.taskList.getTaskFromNumber(taskNumber)
+                            .getTimeInfo();
+                    timeInfo.setStartTime(LocalTime.of(pos + count, 0));
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM");
+                    timeInfo.resetRecurrence();
+                    String test = currDay.format(formatter);
+                    timeInfo.setRecurrence(test);
+                    assignedNumbers.add(taskNumber);
+                    this.flexibleTaskList.deleteTask(taskNumber);
+                } catch (TaskNotFoundException e) {
+                    //do nothing
+                }
             }
             count++;
         }
