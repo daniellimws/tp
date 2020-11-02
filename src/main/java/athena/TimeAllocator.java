@@ -89,8 +89,7 @@ public class TimeAllocator {
      *
      * @param bestLog list of taskNumbers in the index corresponding to the hour they are assigned to
      * @param pos     starting position of the log
-     * @param currDay
-     * @throws TaskNotFoundException if task is not in the taskList
+     * @param currDay date to assign tasks
      */
     private void assignTime(ArrayList<Integer> bestLog, int pos, LocalDate currDay) {
         int count = 0;
