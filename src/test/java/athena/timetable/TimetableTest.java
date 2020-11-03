@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import athena.Forecast;
 import athena.Importance;
 import athena.TaskList;
+import athena.common.utils.DateUtils;
 import athena.exceptions.CommandException;
 import athena.task.Task;
 
@@ -25,18 +26,24 @@ class TimetableTest {
      */
     @Test
     void drawTimetable_start8End12_returnsCorrectlyDrawnTimetable() throws CommandException {
+        LocalDate date = DateUtils.getFirstDayOfWeek().plusWeeks(1);
+
         TaskList taskList = new TaskList();
-        taskList.addTask("Assignment 1", "0800", "2", "6pm", "19-10-2020",
+        date = date.plusDays(1);
+        taskList.addTask("Assignment 1", "0800", "2", "6pm", DateUtils.formatDate(date),
                 Importance.HIGH, "Tough assignment", false);
-        taskList.addTask("Tutorial 2", "0900", "2", "6pm", "20-10-2020",
+        date = date.plusDays(1);
+        taskList.addTask("Tutorial 2", "0900", "2", "6pm", DateUtils.formatDate(date),
                 Importance.HIGH, "Tough assignment", false);
-        taskList.addTask("OP 3", "1000", "2", "6pm", "21-10-2020",
+        date = date.plusDays(1);
+        taskList.addTask("OP 3", "1000", "2", "6pm", DateUtils.formatDate(date),
                 Importance.HIGH, "Tough assignment", false);
-        taskList.addTask("TP 4", "1100", "2", "6pm", "22-10-2020",
+        date = date.plusDays(1);
+        taskList.addTask("TP 4", "1100", "2", "6pm", DateUtils.formatDate(date),
                 Importance.HIGH, "Tough assignment", false);
 
         ArrayList<LocalDate> dates = new ArrayList<LocalDate>();
-        LocalDate date = LocalDate.parse("18-10-2020", DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        date = DateUtils.getFirstDayOfWeek().plusWeeks(1);
         for (int i = 0; i < 7; i++) {
             dates.add(date);
             date = date.plusDays(1);
@@ -46,27 +53,35 @@ class TimetableTest {
         String drawnTimetable = timetable.drawTimetable(dates);
         String expectedDrawnTimetable =
                 "+-------08---------09---------10---------11---------+\n"
-                        + "|  SUN  |          |          |          |          |\n"
-                        + "| 18/10 |          |          |          |          |\n"
+                        + "|  DA0  |          |          |          |          |\n"
+                        + "| DATE0 |          |          |          |          |\n"
                         + "+-------+----------+----------+----------+----------+\n"
-                        + "|  MON  | Assignment 1        |          |          |\n"
-                        + "| 19/10 | [0]                 |          |          |\n"
+                        + "|  DA1  | Assignment 1        |          |          |\n"
+                        + "| DATE1 | [0]                 |          |          |\n"
                         + "+-------+----------+----------+----------+----------+\n"
-                        + "|  TUE  |          | Tutorial 2          |          |\n"
-                        + "| 20/10 |          | [1]                 |          |\n"
+                        + "|  DA2  |          | Tutorial 2          |          |\n"
+                        + "| DATE2 |          | [1]                 |          |\n"
                         + "+-------+----------+----------+----------+----------+\n"
-                        + "|  WED  |          |          | OP 3                |\n"
-                        + "| 21/10 |          |          | [2]                 |\n"
+                        + "|  DA3  |          |          | OP 3                |\n"
+                        + "| DATE3 |          |          | [2]                 |\n"
                         + "+-------+----------+----------+----------+----------+\n"
-                        + "|  THU  |          |          |          | TP 4     |\n"
-                        + "| 22/10 |          |          |          | [3]      |\n"
+                        + "|  DA4  |          |          |          | TP 4     |\n"
+                        + "| DATE4 |          |          |          | [3]      |\n"
                         + "+-------+----------+----------+----------+----------+\n"
-                        + "|  FRI  |          |          |          |          |\n"
-                        + "| 23/10 |          |          |          |          |\n"
+                        + "|  DA5  |          |          |          |          |\n"
+                        + "| DATE5 |          |          |          |          |\n"
                         + "+-------+----------+----------+----------+----------+\n"
-                        + "|  SAT  |          |          |          |          |\n"
-                        + "| 24/10 |          |          |          |          |\n"
+                        + "|  DA6  |          |          |          |          |\n"
+                        + "| DATE6 |          |          |          |          |\n"
                         + "+-------+----------+----------+----------+----------+\n";
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM");
+        for (int i = 0; i < 7; i++) {
+            date = dates.get(i);
+            expectedDrawnTimetable = expectedDrawnTimetable.replace("DATE" + i, date.format(formatter));
+            expectedDrawnTimetable = expectedDrawnTimetable.replace("DA" + i, date.getDayOfWeek().name()
+                                        .substring(0, 3));
+        }
 
         assertEquals(drawnTimetable, expectedDrawnTimetable);
     }
