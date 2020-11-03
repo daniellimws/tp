@@ -1,26 +1,19 @@
 package athena.timetable;
 
-import athena.Forecast;
-import athena.Importance;
-import athena.TaskList;
-import athena.TestSetup;
-import athena.exceptions.ClashInTaskException;
-import athena.exceptions.CommandException;
-import athena.task.Task;
-import athena.task.taskfilter.ForecastFilter;
-import athena.task.taskfilter.ImportanceFilter;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalField;
-import java.time.temporal.WeekFields;
 import java.util.ArrayList;
-import java.util.Locale;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import athena.Forecast;
+import athena.Importance;
+import athena.TaskList;
+import athena.exceptions.CommandException;
+import athena.task.Task;
 
 /**
  * Test methods of Timetable.
@@ -129,7 +122,7 @@ class TimetableTest {
                 "16-12-2020", Importance.MEDIUM, "Tough assignment", 9, false));
         days.add(day);
 
-        TaskList taskList = TestSetup.getTestTaskList();
+        TaskList taskList = getTestTaskList();
         Timetable timetable = new Timetable(taskList);
 
         assertTrue(areTimetablesSame(timetable, days));
@@ -163,21 +156,10 @@ class TimetableTest {
                 "15-12-2020", Importance.HIGH, "Tough assignment", 6, false));
         days.add(day);
 
-        TaskList taskList = TestSetup.getTestTaskList();
+        TaskList taskList = getTestTaskList();
         Timetable timetable = new Timetable(taskList, Importance.HIGH, Forecast.ALL);
 
         assertTrue(areTimetablesSame(timetable, days));
-    }
-
-    /**
-     * Utility method to get the first day of this week.
-     *
-     * @return The first day of this week.
-     */
-    private LocalDate getFirstDayOfWeek() {
-        LocalDate now = LocalDate.now();
-        TemporalField field = WeekFields.of(Locale.getDefault()).dayOfWeek();
-        return now.with(field, 1);
     }
 
     /**
@@ -212,4 +194,33 @@ class TimetableTest {
         return true;
     }
 
+    /**
+     * Gets a task list filled with default tasks.
+     *
+     * @return Task list of default tasks
+     */
+    public static TaskList getTestTaskList() throws CommandException {
+        TaskList taskList = new TaskList();
+        taskList.addTask(0, "Assignment 1", "1600", "2", "6pm", "12-12-2020",
+                Importance.HIGH, "Tough assignment", false);
+        taskList.addTask(1, "Assignment 2", "1600", "2", "6pm", "13-12-2020",
+                Importance.MEDIUM, "Tough assignment", false);
+        taskList.addTask(2, "Assignment 3", "1000", "2", "6pm", "14-12-2020",
+                Importance.LOW, "Tough assignment", false);
+        taskList.addTask(3, "Assignment 4", "1300", "2", "6pm", "14-12-2020",
+                Importance.MEDIUM, "Tough assignment", false);
+        taskList.addTask(4, "Assignment 5", "1600", "2", "6pm", "14-12-2020",
+                Importance.HIGH, "Tough assignment", false);
+        taskList.addTask(5, "Assignment 6", "1600", "2", "6pm", "15-12-2020",
+                Importance.MEDIUM, "Tough assignment", false);
+        taskList.addTask(6, "Assignment 7", "1900", "2", "6pm", "15-12-2020",
+                Importance.HIGH, "Tough assignment", false);
+        taskList.addTask(7, "Assignment 8", "2100", "2", "6pm", "15-12-2020",
+                Importance.MEDIUM, "Tough assignment", false);
+        taskList.addTask(8, "Assignment 9", "1600", "2", "6pm", "16-12-2020",
+                Importance.LOW, "Tough assignment", false);
+        taskList.addTask(9, "Assignment 10", "1300", "2", "6pm", "16-12-2020",
+                Importance.MEDIUM, "Tough assignment", false);
+        return taskList;
+    }
 }
