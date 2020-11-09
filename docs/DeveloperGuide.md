@@ -1,22 +1,22 @@
 # Developer Guide
 
-- [Developer Guide](#developer-guide)
-  - [Introduction](#introduction)
-  - [Setting up and getting started](#setting-up-and-getting-started)
+- **[Developer Guide](#developer-guide)**
+  - **[Introduction](#introduction)**
+  - **[Setting up and getting started](#setting-up-and-getting-started)**
     - [Prerequisites](#prerequisites)
     - [Setting up the project in your computer](#setting-up-the-project-in-your-computer)
-  - [**Design & implementation**](#design--implementation)
+  - **[Design & implementation](#design--implementation)**
     - [Architecture](#architecture)
     - [UI component](#ui-component)
     - [Parser component](#parser-component)
     - [Timetable component](#timetable-component)
-  - [**Implementation**](#implementation)
+  - **[Implementation](#implementation)**
     - [User command processing](#user-command-processing)
     - [Add task feature](#add-task-feature)
     - [Edit task feature](#edit-task-feature)
     - [List feature](#list-feature)
     - [Mark task as done feature](#mark-task-as-done-feature)
-  - [Appendix: Instructions for manual testing](#appendix-instructions-for-manual-testing)
+  - **[Appendix: Instructions for manual testing](#appendix-instructions-for-manual-testing)**
       - [Launch and shutdown](#launch-and-shutdown)
       - [Adding a task](#adding-a-task)
       - [Editing a task](#editing-a-task)
@@ -25,11 +25,11 @@
       - [Deleting a task](#deleting-a-task)
       - [Viewing the full details of a task](#viewing-the-full-details-of-a-task)
       - [Help](#help)
-  - [Appendix: Requirements](#appendix-requirements)
+  - **[Appendix: Requirements](#appendix-requirements)**
     - [Product scope](#product-scope)
       - [Target user profile](#target-user-profile)
       - [Value proposition](#value-proposition)
-  - [**Other Guides: Documentation, Testing, Dev-ops**](#other-guides-documentation-testing-dev-ops)
+  - **[Other Guides: Documentation, Testing, Dev-ops](#other-guides-documentation-testing-dev-ops)**
 
 ## Introduction
 
